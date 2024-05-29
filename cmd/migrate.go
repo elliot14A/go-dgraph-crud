@@ -16,11 +16,11 @@ var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "Run dgraph schema migrations",
 	Run: func(cmd *cobra.Command, args []string) {
-		buildSchema()
+		buildDgraphSchema()
 	},
 }
 
-func buildSchema() error {
+func buildDgraphSchema() error {
 	pkg.SetupLogger()
 	logger := pkg.GetLogger()
 	err := pkg.SetupDgraphClient(logger)
@@ -30,22 +30,41 @@ func buildSchema() error {
 	}
 
 	// set schema
+	// I was not able to find any source
+	// which helps define facets in the schema itself
 	op := &api.Operation{
 		Schema: `
- 		type Customer {
-      id: ID!
-      name: String!
-      email: String!
-      accounts: [Account] @hasInverse(field: customer)
-    }
+			type Author {
+				name  
+				email
+				books
+			}
 
-    type Account {
-      id: ID!
-      accountNumber: String!
-      balance: Float!
-      customer: Customer
-      transactions: [Transaction] @hasInverse(field: account)
-    }
+			type Book {
+				title
+				genre
+				published_year
+			}
+
+			type Borrower {
+				name
+				email
+				books_borrowed
+			}
+
+			type Genre {
+				name
+			}
+
+
+			name: string @index(exact) .
+			title: string @index(exact) .
+			books: [uid] @reverse .
+			email: string @upsert @index(exact) .
+			books_borrowed: [uid] @reverse .
+			genre: [uid] @reverse .
+			published_year: datetime @index(year) .
+
 		`,
 	}
 
