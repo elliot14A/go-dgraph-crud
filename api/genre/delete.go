@@ -1,16 +1,16 @@
-package author
+package genre
 
 import (
 	"net/http"
 
 	"github.com/elliot14A/go-dgraph-crud/actions"
-	authorActions "github.com/elliot14A/go-dgraph-crud/actions/author"
+	genreActions "github.com/elliot14A/go-dgraph-crud/actions/genre"
 	"github.com/labstack/echo/v4"
 )
 
 func Delete(c echo.Context) error {
 	uid := c.Param("uid")
-	err := authorActions.Delete(uid)
+	err := genreActions.Delete(uid)
 	if err != nil {
 		if actionErr, ok := err.(actions.ActionErr); ok {
 			if actionErr.Type == actions.ErrNotFound {
@@ -19,5 +19,5 @@ func Delete(c echo.Context) error {
 		}
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, "deleted author successfully")
+	return c.JSON(http.StatusOK, "deleted genre successfully")
 }

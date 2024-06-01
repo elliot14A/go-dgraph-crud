@@ -1,4 +1,4 @@
-package author
+package genre
 
 import (
 	"context"
@@ -31,9 +31,9 @@ func Delete(uid string) error {
 	}
 
 	if (len(res.GetTxn().Preds)) < 2 {
-		logger.Error(fmt.Sprintf("author with id '%s' not found.", uid))
+		logger.Error(fmt.Sprintf("genre with id '%s' not found.", uid))
 		actionErr := actions.ActionErr{
-			Message: fmt.Sprintf("author with id '%s' not found.", uid),
+			Message: fmt.Sprintf("genre with id '%s' not found.", uid),
 			Type:    actions.ErrNotFound,
 		}
 		return actionErr
